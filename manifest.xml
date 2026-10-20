@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Inlocuiti ADDIN-HOST cu domeniul pe care sunt gazduite fisierele din src/ si assets/. -->
+<OfficeApp xmlns="http://schemas.microsoft.com/office/appforoffice/1.1"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xmlns:bt="http://schemas.microsoft.com/office/officeappbasictypes/1.0"
+           xmlns:mailappor="http://schemas.microsoft.com/office/mailappversionoverrides/1.0"
+           xsi:type="MailApp">
+  <Id>b0835b46-0256-474e-8105-79a98da38c6c</Id>
+  <Version>1.0.0.0</Version>
+  <ProviderName>WINCON</ProviderName>
+  <DefaultLocale>ro-RO</DefaultLocale>
+  <DisplayName DefaultValue="Semnatura WINCON"/>
+  <Description DefaultValue="Adauga automat semnatura standard WINCON in emailuri."/>
+  <IconUrl DefaultValue="https://farkasrazvanionel-png.github.io/semnatura-wincon/assets/icon-64.png"/>
+  <HighResolutionIconUrl DefaultValue="https://farkasrazvanionel-png.github.io/semnatura-wincon/assets/icon-128.png"/>
+  <SupportUrl DefaultValue="https://www.wincon.ro"/>
+  <AppDomains>
+    <AppDomain>https://farkasrazvanionel-png.github.io</AppDomain>
+  </AppDomains>
+  <Hosts>
+    <Host Name="Mailbox"/>
+  </Hosts>
+  <Requirements>
+    <Sets>
+      <Set Name="Mailbox" MinVersion="1.1"/>
+    </Sets>
+  </Requirements>
+  <FormSettings>
+    <Form xsi:type="ItemRead">
+      <DesktopSettings>
+        <SourceLocation DefaultValue="https://farkasrazvanionel-png.github.io/semnatura-wincon/commands.html"/>
+        <RequestedHeight>250</RequestedHeight>
+      </DesktopSettings>
+    </Form>
+  </FormSettings>
+  <Permissions>ReadWriteItem</Permissions>
+  <Rule xsi:type="RuleCollection" Mode="Or">
+    <Rule xsi:type="ItemIs" ItemType="Message" FormType="Read"/>
+  </Rule>
+  <DisableEntityHighlighting>false</DisableEntityHighlighting>
+  <VersionOverrides xmlns="http://schemas.microsoft.com/office/mailappversionoverrides" xsi:type="VersionOverridesV1_0">
+    <VersionOverrides xmlns="http://schemas.microsoft.com/office/mailappversionoverrides/1.1" xsi:type="VersionOverridesV1_1">
+      <Requirements>
+        <!-- 1.5 ca sa se incarce si pe telefon (Android/iOS suporta oficial pana la 1.5, plus API-urile pentru evenimente). Codul verifica singur ce API-uri exista. -->
+        <bt:Sets DefaultMinVersion="1.5">
+          <bt:Set Name="Mailbox"/>
+        </bt:Sets>
+      </Requirements>
+      <Hosts>
+        <Host xsi:type="MailHost">
+          <Runtimes>
+            <!-- Outlook pe web, Outlook nou si Mac folosesc pagina HTML; Outlook clasic pe Windows foloseste direct fisierul JS. -->
+            <Runtime resid="WebViewRuntime.Url">
+              <Override type="javascript" resid="JSRuntime.Url"/>
+            </Runtime>
+          </Runtimes>
+          <DesktopFormFactor>
+            <FunctionFile resid="Commands.Url"/>
+            <ExtensionPoint xsi:type="LaunchEvent">
+              <LaunchEvents>
+                <LaunchEvent Type="OnNewMessageCompose" FunctionName="onNewMessageComposeHandler"/>
+              </LaunchEvents>
+              <SourceLocation resid="WebViewRuntime.Url"/>
+            </ExtensionPoint>
+          </DesktopFormFactor>
+          <!-- Outlook pe Android si iOS (aplicatia 4.2352.0 sau mai noua). -->
+          <MobileFormFactor>
+            <FunctionFile resid="Commands.Url"/>
+            <ExtensionPoint xsi:type="LaunchEvent">
+              <LaunchEvents>
+                <LaunchEvent Type="OnNewMessageCompose" FunctionName="onNewMessageComposeHandler"/>
+              </LaunchEvents>
+              <SourceLocation resid="WebViewRuntime.Url"/>
+            </ExtensionPoint>
+          </MobileFormFactor>
+        </Host>
+      </Hosts>
+      <Resources>
+        <bt:Images>
+          <bt:Image id="Icon.16x16" DefaultValue="https://farkasrazvanionel-png.github.io/semnatura-wincon/assets/icon-16.png"/>
+          <bt:Image id="Icon.32x32" DefaultValue="https://farkasrazvanionel-png.github.io/semnatura-wincon/assets/icon-32.png"/>
+          <bt:Image id="Icon.80x80" DefaultValue="https://farkasrazvanionel-png.github.io/semnatura-wincon/assets/icon-80.png"/>
+        </bt:Images>
+        <bt:Urls>
+          <bt:Url id="Commands.Url" DefaultValue="https://farkasrazvanionel-png.github.io/semnatura-wincon/commands.html"/>
+          <bt:Url id="WebViewRuntime.Url" DefaultValue="https://farkasrazvanionel-png.github.io/semnatura-wincon/launchevent.html"/>
+          <bt:Url id="JSRuntime.Url" DefaultValue="https://farkasrazvanionel-png.github.io/semnatura-wincon/launchevent.js"/>
+        </bt:Urls>
+      </Resources>
+    </VersionOverrides>
+  </VersionOverrides>
+</OfficeApp>
