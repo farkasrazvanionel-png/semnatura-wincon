@@ -100,6 +100,12 @@ function buildSignature(u, compact, logoUrl, logoPosition) {
     "</div>";
 }
 
+// Outlook opreste add-in-ul dupa 60 de secunde; nimic nu are voie sa astepte la nesfarsit.
+var WAIT_MS = 4000;
+function withTimeout(promise, fallback) {
+  return Promise.race([promise, new Promise(function (resolve) { setTimeout(function () { resolve(fallback); }, WAIT_MS); })]);
+}
+
 function loadUser(email) {
   return fetch(DATA_URL, { cache: "no-cache" })
     .then(function (r) { return r.ok ? r.json() : {}; })
@@ -120,13 +126,14 @@ function onNewMessageComposeHandler(event) {
   var item = Office.context.mailbox.item;
   var profile = Office.context.mailbox.userProfile;
 
-  Promise.all([getComposeType(item), loadUser(profile.emailAddress)])
+  Promise.all([withTimeout(getComposeType(item), "newMail"), withTimeout(loadUser(profile.emailAddress), undefined)])
     .then(function (results) {
       var compact = results[0] !== "newMail";
       var html = buildSignature(normalizeUser(results[1], profile.displayName, profile.emailAddress), compact);
       if (!item.body.setSignatureAsync) return event.completed();
       var setSignature = function () {
-        item.body.setSignatureAsync(html, { coercionType: Office.CoercionType.Html }, function () {
+        item.body.setSignatureAsync(html, { coercionType: Office.CoercionType.Html }, function (result) {
+          if (result && result.status !== Office.AsyncResultStatus.Succeeded) console.error("Semnatura WINCON:", result.error);
           event.completed();
         });
       };
@@ -135,7 +142,7 @@ function onNewMessageComposeHandler(event) {
       if (item.disableClientSignatureAsync) item.disableClientSignatureAsync(setSignature);
       else setSignature();
     })
-    .catch(function () { event.completed(); });
+    .catch(function (err) { console.error("Semnatura WINCON:", err); event.completed(); });
 }
 
 if (typeof Office !== "undefined" && Office.actions) {

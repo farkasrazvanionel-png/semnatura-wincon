@@ -6,7 +6,7 @@
            xmlns:mailappor="http://schemas.microsoft.com/office/mailappversionoverrides/1.0"
            xsi:type="MailApp">
   <Id>b0835b46-0256-474e-8105-79a98da38c6c</Id>
-  <Version>1.0.0.0</Version>
+  <Version>1.0.1.0</Version>
   <ProviderName>WINCON</ProviderName>
   <DefaultLocale>ro-RO</DefaultLocale>
   <DisplayName DefaultValue="Semnatura WINCON"/>
@@ -83,7 +83,7 @@
         </bt:Images>
         <bt:Urls>
           <bt:Url id="Commands.Url" DefaultValue="https://farkasrazvanionel-png.github.io/semnatura-wincon/commands.html"/>
-          <bt:Url id="WebViewRuntime.Url" DefaultValue="https://farkasrazvanionel-png.github.io/semnatura-wincon/launchevent.html"/>
+          <bt:Url id="WebViewRuntime.Url" DefaultValue="https://farkasrazvanionel-png.github.io/semnatura-wincon/commands.html"/>
           <bt:Url id="JSRuntime.Url" DefaultValue="https://farkasrazvanionel-png.github.io/semnatura-wincon/launchevent.js"/>
         </bt:Urls>
       </Resources>
